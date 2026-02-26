@@ -1,0 +1,335 @@
+mysql> show tables;
++-----------------+
+| Tables_in_rahul |
++-----------------+
+| cg              |
+| clg             |
+| stu             |
++-----------------+
+3 rows in set (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| lab                |
+| mysql              |
+| performance_schema |
+| rahul              |
+| sakila             |
+| sys                |
+| test_app           |
+| travel_db          |
+| world              |
++--------------------+
+10 rows in set (0.00 sec)
+
+mysql> use rahul;
+Database changed
+mysql> show tables;
++-----------------+
+| Tables_in_rahul |
++-----------------+
+| cg              |
+| clg             |
+| stu             |
++-----------------+
+3 rows in set (0.00 sec)
+
+mysql> create database company;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use company;
+Database changed
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> create table 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> create table employees(name varchar(50), phone int(10),address varchar(500));
+Query OK, 0 rows affected, 1 warning (0.04 sec)
+
+mysql> desc employees
+    -> ;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| name    | varchar(50)  | YES  |     | NULL    |       |
+| phone   | int          | YES  |     | NULL    |       |
+| address | varchar(500) | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> insert into employees("Ravi",9876543210,"Mysuru");
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"Ravi",9876543210,"Mysuru")' at line 1
+mysql> insert into employees values("Ravi",9876543210,"Mysuru");
+ERROR 1264 (22003): Out of range value for column 'phone' at row 1
+mysql> insert into employees values("Ravi",987654321,"Mysuru");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *from employees;
++------+-----------+---------+
+| name | phone     | address |
++------+-----------+---------+
+| Ravi | 987654321 | Mysuru  |
++------+-----------+---------+
+1 row in set (0.00 sec)
+
+mysql> use rahul
+Database changed
+mysql> show tables;
++-----------------+
+| Tables_in_rahul |
++-----------------+
+| cg              |
+| clg             |
+| orders_8        |
+| products_8      |
+| stu             |
+| users_8         |
++-----------------+
+6 rows in set (0.00 sec)
+
+mysql> use company;
+Database changed
+mysql> show tables;
++-------------------+
+| Tables_in_company |
++-------------------+
+| employees         |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> select *from employees;
++------+-----------+---------+
+| name | phone     | address |
++------+-----------+---------+
+| Ravi | 987654321 | Mysuru  |
++------+-----------+---------+
+1 row in set (0.00 sec)
+
+mysql> insert into employees values("Abhi",987654881,"Bangalore");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *from employees;
++------+-----------+-----------+
+| name | phone     | address   |
++------+-----------+-----------+
+| Ravi | 987654321 | Mysuru    |
+| Abhi | 987654881 | Bangalore |
++------+-----------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> insert into employees values("Manju",787654881,"Mandya");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into employees values("Mohan",687654881,"Goa");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from employees;
++-------+-----------+-----------+
+| name  | phone     | address   |
++-------+-----------+-----------+
+| Ravi  | 987654321 | Mysuru    |
+| Abhi  | 987654881 | Bangalore |
+| Manju | 787654881 | Mandya    |
+| Mohan | 687654881 | Goa       |
++-------+-----------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> ^C
+mysql> select name from employees;
++-------+
+| name  |
++-------+
+| Ravi  |
+| Abhi  |
+| Manju |
+| Mohan |
++-------+
+4 rows in set (0.00 sec)
+
+mysql> select name,address from employees
+    -> ;
++-------+-----------+
+| name  | address   |
++-------+-----------+
+| Ravi  | Mysuru    |
+| Abhi  | Bangalore |
+| Manju | Mandya    |
+| Mohan | Goa       |
++-------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select *from employees where name="ravi";
++------+-----------+---------+
+| name | phone     | address |
++------+-----------+---------+
+| Ravi | 987654321 | Mysuru  |
++------+-----------+---------+
+1 row in set (0.00 sec)
+
+mysql> select *from employees where name="mohan";
++-------+-----------+---------+
+| name  | phone     | address |
++-------+-----------+---------+
+| Mohan | 687654881 | Goa     |
++-------+-----------+---------+
+1 row in set (0.00 sec)
+
+mysql> select *from employees where address="banglaore";
+Empty set (0.00 sec)
+
+mysql> select *from employees where address="bangalore";
++------+-----------+-----------+
+| name | phone     | address   |
++------+-----------+-----------+
+| Abhi | 987654881 | Bangalore |
++------+-----------+-----------+
+1 row in set (0.00 sec)
+
+mysql> select *from employees where name ="abhi" and address="bangalore";
++------+-----------+-----------+
+| name | phone     | address   |
++------+-----------+-----------+
+| Abhi | 987654881 | Bangalore |
++------+-----------+-----------+
+1 row in set (0.00 sec)
+
+mysql> select *from employees where name ="ravi" or address="bangalore";
++------+-----------+-----------+
+| name | phone     | address   |
++------+-----------+-----------+
+| Ravi | 987654321 | Mysuru    |
+| Abhi | 987654881 | Bangalore |
++------+-----------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select *from employees where name ="ravi" and address="bangalore";
+Empty set (0.00 sec)
+
+mysql> select *from employees where not name ="ravi";
++-------+-----------+-----------+
+| name  | phone     | address   |
++-------+-----------+-----------+
+| Abhi  | 987654881 | Bangalore |
+| Manju | 787654881 | Mandya    |
+| Mohan | 687654881 | Goa       |
++-------+-----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> update table employees set phone=456343535 where name="mohan";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table employees set phone=456343535 where name="mohan"' at line 1
+mysql> update employees set phone=456343535 where name="mohan";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select *from employees;
++-------+-----------+-----------+
+| name  | phone     | address   |
++-------+-----------+-----------+
+| Ravi  | 987654321 | Mysuru    |
+| Abhi  | 987654881 | Bangalore |
+| Manju | 787654881 | Mandya    |
+| Mohan | 456343535 | Goa       |
++-------+-----------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> update employees set phone=156343535 where name="mohan"  and address="Goa";
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select *from employees;
++-------+-----------+-----------+
+| name  | phone     | address   |
++-------+-----------+-----------+
+| Ravi  | 987654321 | Mysuru    |
+| Abhi  | 987654881 | Bangalore |
+| Manju | 787654881 | Mandya    |
+| Mohan | 156343535 | Goa       |
++-------+-----------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> delete from employee where name="manju";
+ERROR 1146 (42S02): Table 'company.employee' doesn't exist
+mysql> delete from employees where name="manju";
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *from employees;
++-------+-----------+-----------+
+| name  | phone     | address   |
++-------+-----------+-----------+
+| Ravi  | 987654321 | Mysuru    |
+| Abhi  | 987654881 | Bangalore |
+| Mohan | 156343535 | Goa       |
++-------+-----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> truncate employees;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select *from employees;
+Empty set (0.00 sec)
+
+mysql> desc employees;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| name    | varchar(50)  | YES  |     | NULL    |       |
+| phone   | int          | YES  |     | NULL    |       |
+| address | varchar(500) | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> drop employees;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'employees' at line 1
+mysql> drop table employees;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc employees;
+ERROR 1146 (42S02): Table 'company.employees' doesn't exist
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| information_schema |
+| lab                |
+| mysql              |
+| performance_schema |
+| rahul              |
+| sakila             |
+| sys                |
+| test_app           |
+| travel_db          |
+| world              |
++--------------------+
+11 rows in set (0.00 sec)
+
+mysql> drop database company;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| lab                |
+| mysql              |
+| performance_schema |
+| rahul              |
+| sakila             |
+| sys                |
+| test_app           |
+| travel_db          |
+| world              |
++--------------------+
+10 rows in set (0.00 sec)
+
+mysql> Terminal close -- exit!

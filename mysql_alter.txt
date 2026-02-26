@@ -1,0 +1,425 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| lab                |
+| mysql              |
+| performance_schema |
+| rahul              |
+| sakila             |
+| sys                |
+| test_app           |
+| travel_db          |
+| world              |
++--------------------+
+10 rows in set (0.00 sec)
+
+mysql> create database company;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use company
+Database changed
+mysql> create table emp(name varchar(20),phone varchar(10),address varchar(50));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> desc emp;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| name    | varchar(20) | YES  |     | NULL    |       |
+| phone   | varchar(10) | YES  |     | NULL    |       |
+| address | varchar(50) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> alter table emp add age int(3);
+Query OK, 0 rows affected, 1 warning (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> desc emp;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| name    | varchar(20) | YES  |     | NULL    |       |
+| phone   | varchar(10) | YES  |     | NULL    |       |
+| address | varchar(50) | YES  |     | NULL    |       |
+| age     | int         | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select *from emp;
+Empty set (0.00 sec)
+
+mysql> alter table emp modify address varchar(40);
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc emp;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| name    | varchar(20) | YES  |     | NULL    |       |
+| phone   | varchar(10) | YES  |     | NULL    |       |
+| address | varchar(40) | YES  |     | NULL    |       |
+| age     | int         | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> alter table emp modify age varchar(3);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc emp;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| name    | varchar(20) | YES  |     | NULL    |       |
+| phone   | varchar(10) | YES  |     | NULL    |       |
+| address | varchar(40) | YES  |     | NULL    |       |
+| age     | varchar(3)  | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> rename table emp to emps;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> desc emp;
+ERROR 1146 (42S02): Table 'company.emp' doesn't exist
+mysql> desc emps;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| name    | varchar(20) | YES  |     | NULL    |       |
+| phone   | varchar(10) | YES  |     | NULL    |       |
+| address | varchar(40) | YES  |     | NULL    |       |
+| age     | varchar(3)  | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> alter table emp rename column phone phno;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'phno' at line 1
+mysql> alter table emp rename column phone phno varchar(11);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'phno varchar(11)' at line 1
+mysql> alter table emp rename column phone to phno varchar(11);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varchar(11)' at line 1
+mysql> alter table emp rename column phone to phno;
+ERROR 1146 (42S02): Table 'company.emp' doesn't exist
+mysql> alter table emps rename column phone to phno;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc emps;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| name    | varchar(20) | YES  |     | NULL    |       |
+| phno    | varchar(10) | YES  |     | NULL    |       |
+| address | varchar(40) | YES  |     | NULL    |       |
+| age     | varchar(3)  | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> alter table emps modify age varchar(3) after phno;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc emps;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| name    | varchar(20) | YES  |     | NULL    |       |
+| phno    | varchar(10) | YES  |     | NULL    |       |
+| age     | varchar(3)  | YES  |     | NULL    |       |
+| address | varchar(40) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> alter table emps add column id int;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc emps;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| name    | varchar(20) | YES  |     | NULL    |       |
+| phno    | varchar(10) | YES  |     | NULL    |       |
+| age     | varchar(3)  | YES  |     | NULL    |       |
+| address | varchar(40) | YES  |     | NULL    |       |
+| id      | int         | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> alter table emps modify id int before name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'before name' at line 1
+mysql> alter table emps modify id int first;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc emps;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| id      | int         | YES  |     | NULL    |       |
+| name    | varchar(20) | YES  |     | NULL    |       |
+| phno    | varchar(10) | YES  |     | NULL    |       |
+| age     | varchar(3)  | YES  |     | NULL    |       |
+| address | varchar(40) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> alter table emps change phno ph varhcar(10);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'varhcar(10)' at line 1
+mysql> alter table emps change phno ph varchar(10);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc emps;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| id      | int         | YES  |     | NULL    |       |
+| name    | varchar(20) | YES  |     | NULL    |       |
+| ph      | varchar(10) | YES  |     | NULL    |       |
+| age     | varchar(3)  | YES  |     | NULL    |       |
+| address | varchar(40) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> drop table emps;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show tables;
+Empty set (0.01 sec)
+
+mysql> create table department(id int not null auto_increment,depname varchar(100));
+ERROR 1075 (42000): Incorrect table definition; there can be only one auto column and it must be defined as a key
+mysql> create table department(id int not null auto_increment,depname varchar(100),primary key(id));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> desc department;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| id      | int          | NO   | PRI | NULL    | auto_increment |
+| depname | varchar(100) | YES  |     | NULL    |                |
++---------+--------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> create table emp(id int auto_increment,name varchar(50),age int(3),gender varchar(50),deptid int,primary key(id),foregin key(deptid)references department id);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'key(deptid)references department id)' at line 1
+mysql> create table emp(id int auto_increment,name varchar(50),age int(3),gender varchar(50),deptid int,primary key(id),foregin key(deptid) references department id);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'key(deptid) references department id)' at line 1
+mysql> create table emp(id int auto_increment,name varchar(50),age int(3),gender varchar(50),deptid int,primary key(id),foregin key(deptid) references department id);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'key(deptid) references department id)' at line 1
+mysql> create table emp(id int auto_increment,name varchar(50),age int(3),gender varchar(50),deptid int,primary key(id),foregin  key(deptid) references department id);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'key(deptid) references department id)' at line 1
+mysql> CREATE TABLE emp (
+    ->     id INT AUTO_INCREMENT,
+    ->     name VARCHAR(50),
+    ->     age INT(3),
+    ->     gender VARCHAR(50),
+    ->     deptid INT,
+    ->     PRIMARY KEY (id),
+    ->     FOREIGN KEY (deptid) REFERENCES department(id)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.06 sec)
+
+mysql> desc emp;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| id     | int         | NO   | PRI | NULL    | auto_increment |
+| name   | varchar(50) | YES  |     | NULL    |                |
+| age    | int         | YES  |     | NULL    |                |
+| gender | varchar(50) | YES  |     | NULL    |                |
+| deptid | int         | YES  | MUL | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+5 rows in set (0.01 sec)
+
+mysql> insert into department(depname) values("DEVELOPER"),("FINANCE","TESTING");
+ERROR 1136 (21S01): Column count doesn't match value count at row 2
+mysql> insert into department(depname) values("DEVELOPER"),("FINANCE","TESTING");
+ERROR 1136 (21S01): Column count doesn't match value count at row 2
+mysql> insert into department(depname) values("DEVELOPER"),("FINANCE"),("TESTING");
+Query OK, 3 rows affected (0.03 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT *FROM DEPARTMNET
+    -> ;
+ERROR 1146 (42S02): Table 'company.departmnet' doesn't exist
+mysql> SELECT *FROM DEPARTMENT;
++----+-----------+
+| id | depname   |
++----+-----------+
+|  1 | DEVELOPER |
+|  2 | FINANCE   |
+|  3 | TESTING   |
++----+-----------+
+3 rows in set (0.00 sec)
+
+mysql> DELETE FROM DEPARTMENT WHERE DEPNAME="FINANCE;"
+    -> ;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT *FROM DEPARTMENT;
++----+-----------+
+| id | depname   |
++----+-----------+
+|  1 | DEVELOPER |
+|  2 | FINANCE   |
+|  3 | TESTING   |
++----+-----------+
+3 rows in set (0.00 sec)
+
+mysql> DELETE FROM DEPARTMENT WHERE DEPNAME="FINANCE";
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT *FROM DEPARTMENT;
++----+-----------+
+| id | depname   |
++----+-----------+
+|  1 | DEVELOPER |
+|  3 | TESTING   |
++----+-----------+
+2 rows in set (0.00 sec)
+
+mysql> insert into department(depname) values("FINANCE");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT *FROM DEPARTMENT;
++----+-----------+
+| id | depname   |
++----+-----------+
+|  1 | DEVELOPER |
+|  3 | TESTING   |
+|  4 | FINANCE   |
++----+-----------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT *FROM EMP;
+Empty set (0.00 sec)
+
+mysql> DESC EMP;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| id     | int         | NO   | PRI | NULL    | auto_increment |
+| name   | varchar(50) | YES  |     | NULL    |                |
+| age    | int         | YES  |     | NULL    |                |
+| gender | varchar(50) | YES  |     | NULL    |                |
+| deptid | int         | YES  | MUL | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into emp(name,age,gender,deptid)values("emp1",35,"male",1);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into emp(name,age,gender,deptid)values("emp2",36,"male",2);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`company`.`emp`, CONSTRAINT `emp_ibfk_1` FOREIGN KEY (`deptid`) REFERENCES `department` (`id`))
+mysql> insert into emp(name,age,gender,deptid)values("emp2",36,"male",3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into emp(name,age,gender,deptid)values("emp3",30,"male",4);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into emp(name,age,gender,deptid)values("emp4",30,"female",3);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *FROM EMP;
++----+------+------+--------+--------+
+| id | name | age  | gender | deptid |
++----+------+------+--------+--------+
+|  1 | emp1 |   35 | male   |      1 |
+|  3 | emp2 |   36 | male   |      3 |
+|  4 | emp3 |   30 | male   |      4 |
+|  5 | emp4 |   30 | female |      3 |
++----+------+------+--------+--------+
+4 rows in set (0.00 sec)
+
+mysql> truncate table department;
+ERROR 1701 (42000): Cannot truncate a table referenced in a foreign key constraint (`company`.`emp`, CONSTRAINT `emp_ibfk_1`)
+mysql> 
+mysql> delete from department where depname="developer;"
+    -> ;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delete from department where depname="developer";
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`company`.`emp`, CONSTRAINT `emp_ibfk_1` FOREIGN KEY (`deptid`) REFERENCES `department` (`id`))
+mysql> delete from emp where depid=1;
+ERROR 1054 (42S22): Unknown column 'depid' in 'where clause'
+mysql> delete from emp where id=1;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT *FROM EMP;
++----+------+------+--------+--------+
+| id | name | age  | gender | deptid |
++----+------+------+--------+--------+
+|  3 | emp2 |   36 | male   |      3 |
+|  4 | emp3 |   30 | male   |      4 |
+|  5 | emp4 |   30 | female |      3 |
++----+------+------+--------+--------+
+3 rows in set (0.00 sec)
+
+mysql> delete from department where id=1;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *FROM DEPARTMENT;
++----+---------+
+| id | depname |
++----+---------+
+|  3 | TESTING |
+|  4 | FINANCE |
++----+---------+
+2 rows in set (0.00 sec)
+
+mysql> truncate emp;
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> SELECT *FROM EMP;
+Empty set (0.00 sec)
+
+mysql> alter table emps auto_increment=100;
+ERROR 1146 (42S02): Table 'company.emps' doesn't exist
+mysql> alter table emp auto_increment=100;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into emp(name,age,gender,deptid)values("emp1",30,"male",3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT *FROM EMP;
++-----+------+------+--------+--------+
+| id  | name | age  | gender | deptid |
++-----+------+------+--------+--------+
+| 100 | emp1 |   30 | male   |      3 |
++-----+------+------+--------+--------+
+1 row in set (0.00 sec)
+
+mysql> insert into emp(name,age,gender,deptid)values("emp2",33,"male",4);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT *FROM EMP;
++-----+------+------+--------+--------+
+| id  | name | age  | gender | deptid |
++-----+------+------+--------+--------+
+| 100 | emp1 |   30 | male   |      3 |
+| 101 | emp2 |   33 | male   |      4 |
++-----+------+------+--------+--------+
+2 rows in set (0.00 sec)
+
+mysql> update emp set gender="female" where id=101;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT *FROM EMP;
++-----+------+------+--------+--------+
+| id  | name | age  | gender | deptid |
++-----+------+------+--------+--------+
+| 100 | emp1 |   30 | male   |      3 |
+| 101 | emp2 |   33 | female |      4 |
++-----+------+------+--------+--------+
+2 rows in set (0.00 sec)
+
+mysql> Terminal close -- exit!

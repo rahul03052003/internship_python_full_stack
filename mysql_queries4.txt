@@ -1,0 +1,446 @@
+mysql> select curdate();
++------------+
+| curdate()  |
++------------+
+| 2026-03-02 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select curtime();
++-----------+
+| curtime() |
++-----------+
+| 14:35:35  |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> alter table emp add column joining_date date;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select *from emp;
++----+------+------+-------+--------+-------+--------------+
+| id | name | age  | phone | salary | depid | joining_date |
++----+------+------+-------+--------+-------+--------------+
+|  1 | abc  |   30 | 123   |  35000 |     1 | NULL         |
+|  2 | xyz  |   40 | 323   |  45000 |     2 | NULL         |
+|  3 | klj  |   50 | 313   |  25000 |     3 | NULL         |
+|  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
++----+------+------+-------+--------+-------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> update emp set joining_date=curdate() where id=1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select *from emp;
++----+------+------+-------+--------+-------+--------------+
+| id | name | age  | phone | salary | depid | joining_date |
++----+------+------+-------+--------+-------+--------------+
+|  1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  2 | xyz  |   40 | 323   |  45000 |     2 | NULL         |
+|  3 | klj  |   50 | 313   |  25000 |     3 | NULL         |
+|  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
++----+------+------+-------+--------+-------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> update emp set joining_date="2026-02-20" where id=2;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select *from emp;
++----+------+------+-------+--------+-------+--------------+
+| id | name | age  | phone | salary | depid | joining_date |
++----+------+------+-------+--------+-------+--------------+
+|  1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  3 | klj  |   50 | 313   |  25000 |     3 | NULL         |
+|  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
++----+------+------+-------+--------+-------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> select *from department;
++----+-----------+
+| id | depname   |
++----+-----------+
+|  1 | Finance   |
+|  2 | Developer |
+|  3 | Testing   |
+|  4 | BA        |
++----+-----------+
+4 rows in set (0.01 sec)
+
+mysql> delete from department where id=1;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`company`.`emp`, CONSTRAINT `emp_ibfk_1` FOREIGN KEY (`depid`) REFERENCES `department` (`id`))
+mysql> show create table emp;
++-------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table | Create Table                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
++-------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| emp   | CREATE TABLE `emp` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `age` int DEFAULT NULL,
+  `phone` varchar(10) DEFAULT NULL,
+  `salary` int DEFAULT NULL,
+  `depid` int NOT NULL,
+  `joining_date` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `depid` (`depid`),
+  CONSTRAINT `emp_ibfk_1` FOREIGN KEY (`depid`) REFERENCES `department` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++-------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> ^C
+mysql> ;
+ERROR: 
+No query specified
+
+mysql> alter table emp drop foreign key emp_ibfk_1;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show create table emp;
++-------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table | Create Table                                                                                                                                                                                                                                                                                                                                                                         |
++-------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| emp   | CREATE TABLE `emp` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `age` int DEFAULT NULL,
+  `phone` varchar(10) DEFAULT NULL,
+  `salary` int DEFAULT NULL,
+  `depid` int NOT NULL,
+  `joining_date` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `depid` (`depid`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++-------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> alter table emp add constraint emp_did foreign key(depid)
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> alter table emp add constraint emp_did foreign key(depid)references department(id) on delete cascade;
+Query OK, 5 rows affected (0.08 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> show create table emp;
++-------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table | Create Table                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
++-------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| emp   | CREATE TABLE `emp` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `age` int DEFAULT NULL,
+  `phone` varchar(10) DEFAULT NULL,
+  `salary` int DEFAULT NULL,
+  `depid` int NOT NULL,
+  `joining_date` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `emp_did` (`depid`),
+  CONSTRAINT `emp_did` FOREIGN KEY (`depid`) REFERENCES `department` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++-------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select *from department;
++----+-----------+
+| id | depname   |
++----+-----------+
+|  1 | Finance   |
+|  2 | Developer |
+|  3 | Testing   |
+|  4 | BA        |
++----+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select *from emp;
++----+------+------+-------+--------+-------+--------------+
+| id | name | age  | phone | salary | depid | joining_date |
++----+------+------+-------+--------+-------+--------------+
+|  1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  3 | klj  |   50 | 313   |  25000 |     3 | NULL         |
+|  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
++----+------+------+-------+--------+-------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into emp(name,age,gender,salary,depid,joining_date)values("Kumar",30,"m",55000,3,curdate());
+ERROR 1054 (42S22): Unknown column 'gender' in 'field list'
+mysql> insert into emp(name,age,salary,depid,joining_date)values("Kumar",30,"m",55000,3,curdate());
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into emp(name,age,phone,salary,depid,joining_date)values("Kumar",30,345,55000,3,curdate());
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *from emp;
++----+-------+------+-------+--------+-------+--------------+
+| id | name  | age  | phone | salary | depid | joining_date |
++----+-------+------+-------+--------+-------+--------------+
+|  1 | abc   |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  2 | xyz   |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  3 | klj   |   50 | 313   |  25000 |     3 | NULL         |
+|  4 | mno   |   40 | 113   |  65000 |     2 | NULL         |
+|  5 | nno   |   40 | 333   |  55000 |     4 | NULL         |
+|  7 | Kumar |   30 | 345   |  55000 |     3 | 2026-03-02   |
++----+-------+------+-------+--------+-------+--------------+
+6 rows in set (0.00 sec)
+
+mysql> delete from department where id=3;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *from emp;
++----+------+------+-------+--------+-------+--------------+
+| id | name | age  | phone | salary | depid | joining_date |
++----+------+------+-------+--------+-------+--------------+
+|  1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
++----+------+------+-------+--------+-------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> select *from department;
++----+-----------+
+| id | depname   |
++----+-----------+
+|  1 | Finance   |
+|  2 | Developer |
+|  4 | BA        |
++----+-----------+
+3 rows in set (0.00 sec)
+
+mysql> insert  into department values("Testing");
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert  into department values(5"Testing");
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"Testing")' at line 1
+mysql> insert  into department values(5,"Testing");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert  into department values(6,"CA");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *from department;
++----+-----------+
+| id | depname   |
++----+-----------+
+|  1 | Finance   |
+|  2 | Developer |
+|  4 | BA        |
+|  5 | Testing   |
+|  6 | CA        |
++----+-----------+
+5 rows in set (0.00 sec)
+
+mysql> --case,when,then,else,end as
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--case,when,then,else,end as' at line 1
+mysql> --case,when,then,else,end as
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--case,when,then,else,end as' at line 1
+mysql> select name,salary,
+    -> case when
+    -> salary<31000 from emp;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from emp' at line 3
+mysql> select name,salary,
+    -> case when 
+    -> salary<31000 then "salary less than 31k"
+    -> when salary=30000 then "salary equals to 30k"
+    -> else 'no salary below 31k'
+    -> end as salary_text from emp;
++------+--------+---------------------+
+| name | salary | salary_text         |
++------+--------+---------------------+
+| abc  |  35000 | no salary below 31k |
+| xyz  |  45000 | no salary below 31k |
+| mno  |  65000 | no salary below 31k |
+| nno  |  55000 | no salary below 31k |
++------+--------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> select name,salary,
+    -> case when
+    -> select name,salary,
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select name,salary,' at line 3
+mysql> 
+mysql> 
+mysql> help;
+
+For information about MySQL products and services, visit:
+   http://www.mysql.com/
+For developer information, including the MySQL Reference Manual, visit:
+   http://dev.mysql.com/
+To buy MySQL Enterprise support, training, or other products, visit:
+   https://shop.mysql.com/
+
+List of all MySQL commands:
+Note that all text commands must be first on line and end with ';'
+?         (\?) Synonym for `help'.
+clear     (\c) Clear the current input statement.
+connect   (\r) Reconnect to the server. Optional arguments are db and host.
+delimiter (\d) Set statement delimiter.
+ego       (\G) Send command to mysql server, display result vertically.
+exit      (\q) Exit mysql. Same as quit.
+go        (\g) Send command to mysql server.
+help      (\h) Display this help.
+notee     (\t) Don't write into outfile.
+print     (\p) Print current command.
+prompt    (\R) Change your mysql prompt.
+quit      (\q) Quit mysql.
+rehash    (\#) Rebuild completion hash.
+source    (\.) Execute an SQL script file. Takes a file name as an argument.
+status    (\s) Get status information from the server.
+system    (\!) Execute a system shell command.
+tee       (\T) Set outfile [to_outfile]. Append everything into given outfile.
+use       (\u) Use another database. Takes database name as argument.
+charset   (\C) Switch to another charset. Might be needed for processing binlog with multi-byte charsets.
+warnings  (\W) Show warnings after every statement.
+nowarning (\w) Don't show warnings after every statement.
+resetconnection(\x) Clean session context.
+query_attributes Sets string parameters (name1 value1 name2 value2 ...) for the next query to pick up.
+ssl_session_data_print Serializes the current SSL session data to stdout or file
+
+For server side help, type 'help contents'
+
+mysql> -- > < >= <= <>
+mysql> select *from emp where salary <35000;
+Empty set (0.00 sec)
+
+mysql> select *from emp where salary >35000;
++----+------+------+-------+--------+-------+--------------+
+| id | name | age  | phone | salary | depid | joining_date |
++----+------+------+-------+--------+-------+--------------+
+|  2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
++----+------+------+-------+--------+-------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> select *from emp where salary =>45000;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '=>45000' at line 1
+mysql> select *from emp where salary >=45000;
++----+------+------+-------+--------+-------+--------------+
+| id | name | age  | phone | salary | depid | joining_date |
++----+------+------+-------+--------+-------+--------------+
+|  2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
++----+------+------+-------+--------+-------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> select *from emp where salary <> 45000;
++----+------+------+-------+--------+-------+--------------+
+| id | name | age  | phone | salary | depid | joining_date |
++----+------+------+-------+--------+-------+--------------+
+|  1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
++----+------+------+-------+--------+-------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> -- inner join,left join,right join
+mysql> select *from department;
++----+-----------+
+| id | depname   |
++----+-----------+
+|  1 | Finance   |
+|  2 | Developer |
+|  4 | BA        |
+|  5 | Testing   |
+|  6 | CA        |
++----+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select *from emp;
++----+------+------+-------+--------+-------+--------------+
+| id | name | age  | phone | salary | depid | joining_date |
++----+------+------+-------+--------+-------+--------------+
+|  1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
++----+------+------+-------+--------+-------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> select *from department;
++----+-----------+
+| id | depname   |
++----+-----------+
+|  1 | Finance   |
+|  2 | Developer |
+|  4 | BA        |
+|  5 | Testing   |
+|  6 | CA        |
++----+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select *from department as dp inner join emp as emp;
++----+-----------+----+------+------+-------+--------+-------+--------------+
+| id | depname   | id | name | age  | phone | salary | depid | joining_date |
++----+-----------+----+------+------+-------+--------+-------+--------------+
+|  1 | Finance   |  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
+|  1 | Finance   |  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  1 | Finance   |  2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  1 | Finance   |  1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  2 | Developer |  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
+|  2 | Developer |  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  2 | Developer |  2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  2 | Developer |  1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  4 | BA        |  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
+|  4 | BA        |  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  4 | BA        |  2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  4 | BA        |  1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  5 | Testing   |  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
+|  5 | Testing   |  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  5 | Testing   |  2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  5 | Testing   |  1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  6 | CA        |  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
+|  6 | CA        |  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  6 | CA        |  2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  6 | CA        |  1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
++----+-----------+----+------+------+-------+--------+-------+--------------+
+20 rows in set (0.00 sec)
+
+mysql> select *from department as dp inner join emp as emp on dp.id=emp.depid;
++----+-----------+----+------+------+-------+--------+-------+--------------+
+| id | depname   | id | name | age  | phone | salary | depid | joining_date |
++----+-----------+----+------+------+-------+--------+-------+--------------+
+|  1 | Finance   |  1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  2 | Developer |  2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  2 | Developer |  4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  4 | BA        |  5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
++----+-----------+----+------+------+-------+--------+-------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> select *from emp as emp right join department as dp on dp.id=emp.depid;
++------+------+------+-------+--------+-------+--------------+----+-----------+
+| id   | name | age  | phone | salary | depid | joining_date | id | depname   |
++------+------+------+-------+--------+-------+--------------+----+-----------+
+|    1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |  1 | Finance   |
+|    2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |  2 | Developer |
+|    4 | mno  |   40 | 113   |  65000 |     2 | NULL         |  2 | Developer |
+|    5 | nno  |   40 | 333   |  55000 |     4 | NULL         |  4 | BA        |
+| NULL | NULL | NULL | NULL  |   NULL |  NULL | NULL         |  5 | Testing   |
+| NULL | NULL | NULL | NULL  |   NULL |  NULL | NULL         |  6 | CA        |
++------+------+------+-------+--------+-------+--------------+----+-----------+
+6 rows in set (0.00 sec)
+
+mysql> select *from department as dp left join emp as emp on dp.id=emp.depid;
++----+-----------+------+------+------+-------+--------+-------+--------------+
+| id | depname   | id   | name | age  | phone | salary | depid | joining_date |
++----+-----------+------+------+------+-------+--------+-------+--------------+
+|  1 | Finance   |    1 | abc  |   30 | 123   |  35000 |     1 | 2026-03-02   |
+|  2 | Developer |    2 | xyz  |   40 | 323   |  45000 |     2 | 2026-02-20   |
+|  2 | Developer |    4 | mno  |   40 | 113   |  65000 |     2 | NULL         |
+|  4 | BA        |    5 | nno  |   40 | 333   |  55000 |     4 | NULL         |
+|  5 | Testing   | NULL | NULL | NULL | NULL  |   NULL |  NULL | NULL         |
+|  6 | CA        | NULL | NULL | NULL | NULL  |   NULL |  NULL | NULL         |
++----+-----------+------+------+------+-------+--------+-------+--------------+
+6 rows in set (0.00 sec)
+
+mysql> Terminal close -- exit!
